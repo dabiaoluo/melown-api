@@ -14,8 +14,11 @@ Melown.UI.prototype.init = function() {
     this.map_ = new Melown.UIControlMap(this);
     this.compass_ = new Melown.UIControlCompass(this, this.config_.controlCompass_);
     this.credits_ = new Melown.UIControlCredits(this);
-    this.logo_ = new Melown.UIControlLogo(this);
+    this.logo_ = new Melown.UIControlLogo(this, this.config_.controlLogo_);
     this.zoom_ = new Melown.UIControlZoom(this, this.config_.controlZoom_);
+    this.space_ = new Melown.UIControlSpace(this, this.config_.controlSpace_);
+    this.link_ = new Melown.UIControlLink(this, this.config_.controlLink_);
+    //this.navigator_ = new Melown.UIControlNavigation(this, this.config_.controlNavigator_);
     this.layers_ = new Melown.UIControlLayers(this, this.config_.controlLayers_);
     this.fallback_ = new Melown.UIControlFallback(this);
     Melown.Utils.disableContexMenu(this.element_);
@@ -66,13 +69,17 @@ Melown.UI.prototype.setParam = function(key_) {
         //case "controlMeasure":     this.setControlVisible(this.config_.controlCompass_); break;
         case "controlScale":       this.setControlVisible("scale", this.config_.controlScale_); break;
         case "controlLayers":      this.setControlVisible("layers", this.config_.controlLayers_); break;
+        case "controlSpace":       this.setControlVisible("space", this.config_.controlSpace_); break;
+        case "controlLink":        this.setControlVisible("link", this.config_.controlLink_); break;
+        case "controlLogo":        this.setControlVisible("logo", this.config_.controlLogo_); break;
     }
 };
 
 Melown.UI.prototype.tick = function(dirty_) {
     if (dirty_) {
         this.compass_.update();
-        this.credits_.update();                
+        this.credits_.update();
+        this.link_.updateLink();                
     }
 };
 

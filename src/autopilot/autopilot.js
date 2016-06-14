@@ -8,11 +8,45 @@ Melown.Autopilot = function(browser_) {
     this.flightTime_ = 0;
     this.trajectoryIndex_ = 0;
     this.finished_ = true;
+    this.autoMovement_ = false;
+    this.autoRotate_ = 0;
+    this.autoPan_ = 0;
+    this.autoPanAzimuth_ = 0;
 
     this.center_ = [0,0,0];
     this.orientation_ = [0,0,0];
     this.viewHeight_ = 0;
     this.fov_ = 90;
+    this.lastTime_ = 0;
+};
+
+Melown.Autopilot.prototype.setAutorotate = function(speed_) {
+    this.autoRotate_ = speed_;
+};
+
+Melown.Autopilot.prototype.getAutorotate = function() {
+    return this.autoRotate_;
+};
+
+Melown.Autopilot.prototype.setAutopan = function(speed_, azimuth_) {
+    this.autoPan_ = speed_;
+    this.autoPanAzimuth_ = azimuth_;
+};
+
+Melown.Autopilot.prototype.getAutopan = function() {
+    return [this.autoPan_, this.autoPanAzimuth_];
+};
+
+Melown.Autopilot.prototype.flyToDAH = function(distance_, azimuth_, height_, options_) {
+    var map_ = this.browser_.getCore().getMap();
+    if (!map_) {
+        return;
+    }
+    
+    options_ = options_ || {};
+    
+    var trajectory_ = map_.generatePIHTrajectory(map_.getPosition(), distance_, azimuth_, height_, options_);
+    this.setTrajectory(trajectory_, options_["samplePeriod"] || 10, options_); 
 };
 
 Melown.Autopilot.prototype.flyTo = function(position_, options_) {
@@ -28,7 +62,7 @@ Melown.Autopilot.prototype.flyTo = function(position_, options_) {
 
 Melown.Autopilot.prototype.flyTrajectory = function(trajectory_, sampleDuration_) {
     var options_ = {};
-    this.setTrajectory(trajectory_, sampleDuration_, options_);
+    this.setTrajectory(trajectory_, sampleDuration_ || 10, {});
 };
 
 Melown.Autopilot.prototype.cancelFlight = function() {
@@ -40,8 +74,13 @@ Melown.Autopilot.prototype.setTrajectory = function(trajectory_, sampleDuration_
         return;
     }
 
+    this.setAutorotate(0);
+    this.setAutopan(0,0);
+
     this.speed_ = options_["speed"] || 1.0;
-    this.lastControlMode_ = this.browser_.getControlMode().getCurrentControlMode(); 
+    if (this.finished_) {
+        this.lastControlMode_ = this.browser_.getControlMode().getCurrentControlMode(); 
+    }
     this.browser_.getControlMode().setCurrentControlMode("disabled");
 
     this.trajectory_ = trajectory_;
@@ -58,16 +97,35 @@ Melown.Autopilot.prototype.setTrajectory = function(trajectory_, sampleDuration_
 };
 
 Melown.Autopilot.prototype.tick = function() {
-    if (this.finished_ || !this.trajectory_) {
-        return;
-    }
-
     var map_ = this.browser_.getMap();
     if (!map_) {
         return;
     }
+
+    var time_ = performance.now();
+    var timeFactor_ =  (time_ - this.lastTime_) / 1000; 
+    this.lastTime_ = time_;
+
+    if (this.autoRotate_ != 0) {
+        var pos_ = map_.getPosition();
+        var o = map_.getPositionOrientation(pos_);
+        o[0] = (o[0] + this.autoRotate_*timeFactor_) % 360;
+        pos_ = map_.setPositionOrientation(pos_, o);
+        map_.setPosition(pos_);
+    }
     
-    var time_ = performance.now() - this.timeStart_;
+    if (this.autoPan_ != 0) {
+        var pos_ = map_.getPosition();
+        pos_ = map_.movePositionCoordsTo(pos_, this.autoPanAzimuth_, map_.getPositionViewExtent(pos_)*(this.autoPan_*0.01)*timeFactor_, 0);
+        map_.setPosition(pos_);
+    }
+
+
+    if (this.finished_ || !this.trajectory_) {
+        return;
+    }
+    
+    time_ = time_ - this.timeStart_;
     var sampleIndex_ =  Math.floor((time_ / this.sampleDuration_)*this.speed_);
     var totalSamples_ = this.trajectory_.length - 1; 
 
@@ -80,7 +138,7 @@ Melown.Autopilot.prototype.tick = function() {
                                                     });
 
     } else {
-        map_.setPosition(this.trajectory_[totalSamples_]);        
+        map_.setPosition(this.trajectory_[totalSamples_]);
     } 
     
     if (sampleIndex_ >= this.trajectory_.length) {

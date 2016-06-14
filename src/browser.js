@@ -29,15 +29,15 @@ Melown.Browser.prototype.getCore = function() {
 };
 
 Melown.Browser.prototype.getMap = function() {
-    return this.core_.getMap();
+    return this.core_ ? this.core_.getMap() : null;
 };
 
 Melown.Browser.prototype.getRenderer = function() {
-    return this.core_.getRenderer();
+    return this.core_ ? this.core_.getRenderer() : null;
 };
 
 Melown.Browser.prototype.getProj4 = function() {
-    return this.core_.getRenderer();
+    return this.core_ ? this.core_.getProj4() : null;
 };
 
 Melown.Browser.prototype.getUI = function() {
@@ -57,6 +57,10 @@ Melown.Browser.prototype.callListener = function(name_, event_) {
 };
 
 Melown.Browser.prototype.onMapLoaded = function() {
+    if (this.autopilot_) {
+        this.autopilot_.setAutorotate(this.config_.autoRotate_);
+        this.autopilot_.setAutopan(this.config_.autoPan_[0], this.config_.autoPan_[1]);
+    }
 };
 
 Melown.Browser.prototype.onMapUnloaded = function() {

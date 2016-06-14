@@ -11,6 +11,10 @@ Melown.UIElement = function(control_, element_) {
     this.dragEndCall_ = this.onDragEnd.bind(this);
     this.firstDragDistance_ = 0;
     this.lastDragDistance_ = 0;
+    this.dragStartPos_ = [0,0];
+    this.dragCurrentPos_ = [0,0];
+    this.dragLastPos_ = [0,0];
+    this.dragAbsMoved_ = [0,0];
     this.zoomDrag_ = false;
 };
 
@@ -32,7 +36,7 @@ Melown.UIElement.prototype.getClass = function() {
     return this;
 };
 
-Melown.UIElement.prototype.hasClass = function(name__) {
+Melown.UIElement.prototype.hasClass = function(name_) {
     return Melown.Utils.hasClass(this.element_, name_);
 };
 
