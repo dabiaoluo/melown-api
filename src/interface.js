@@ -13,8 +13,13 @@ Melown.BrowserInterface = function(element_, config_) {
     this.map_ = null;//this.core_.getMap();
     this.ui_ = this.browser_.ui_;
     this.autopilot_ = this.browser_.autopilot_;
+    this.presenter_ = this.browser_.presenter_;
     this.core_.on("map-loaded", (function(){ this.map_ = this.core_.getMap(); }).bind(this));
     this.core_.on("map-unloaded", (function(){ this.map_ = null; }).bind(this));    
+};
+
+Melown.BrowserInterface.prototype.getPresenter = function() {
+    return this.presenter_;
 };
 
 Melown.BrowserInterface.prototype.getRenderer = function() {
@@ -449,6 +454,7 @@ Melown.getBrowserVersion = function() {
 //prevent minification
 Melown["MapBrowser"] = Melown.MapBrowser;
 Melown.BrowserInterface.prototype["getRenderer"] = Melown.BrowserInterface.prototype.getRenderer; 
+Melown.BrowserInterface.prototype["getPresenter"] = Melown.BrowserInterface.prototype.getPresenter; 
 Melown.BrowserInterface.prototype["getProj4"] = Melown.BrowserInterface.prototype.getProj4; 
 Melown.BrowserInterface.prototype["getUI"] = Melown.BrowserInterface.prototype.getUI; 
 Melown.BrowserInterface.prototype["setControlMode"] = Melown.BrowserInterface.prototype.setControlMode;

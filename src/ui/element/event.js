@@ -77,6 +77,7 @@ Melown.UIEvent.prototype.getMouseCoords = function(absolute_) {
         case "mousedown":
         case "mouseup":
         case "mousemove":
+        case "dblclick":
         case "dragstart":
         case "dragend":
         case "drag":
@@ -119,6 +120,15 @@ Melown.UIEvent.prototype.getDragZoom = function() {
     }
     
     return 1.0;
+};
+
+Melown.UIEvent.prototype.getDragTouches = function() {
+    switch (this.type_) {
+        case "drag":
+            return this.event_["touches"];
+    }
+    
+    return 0;
 };
 
 Melown.UIEvent.prototype.getModifierKey = function(key_) {
@@ -256,6 +266,7 @@ Melown.UIEvent.prototype["getKeyCode"] = Melown.UIEvent.prototype.getKeyCode;
 Melown.UIEvent.prototype["getDragButton"] = Melown.UIEvent.prototype.getDragButton;
 Melown.UIEvent.prototype["getWheelDelta"] = Melown.UIEvent.prototype.getWheelDelta;
 Melown.UIEvent.prototype["getDragZoom"] = Melown.UIEvent.prototype.getDragZoom;
+Melown.UIEvent.prototype["getDragTuches"] = Melown.UIEvent.prototype.getDragTuches;
 Melown.UIEvent.prototype["getTouchesCount"] = Melown.UIEvent.prototype.getTouchesCount;
 Melown.UIEvent.prototype["getTouchCoords"] = Melown.UIEvent.prototype.getTouchCoords;
 Melown.UIEvent.prototype["getType"] = Melown.UIEvent.prototype.getType;

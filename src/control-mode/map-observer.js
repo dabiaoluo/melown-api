@@ -16,11 +16,12 @@ Melown.ControlMode.MapObserver = function(browser_) {
     this["keyup"] = this.keyup;
     this["keydown"] = this.keydown;
     this["keypress"] = this.keypress;
+    this["doubleclick"] = this.doubleclick;
 };
 
 Melown.ControlMode.MapObserver.prototype.drag = function(event_) {
     var map_ = this.browser_.getMap();
-    if (map_ == null) {
+    if (!map_) {
         return;
     }
 
@@ -28,18 +29,21 @@ Melown.ControlMode.MapObserver.prototype.drag = function(event_) {
     var coords_ = map_.getPositionCoords(pos_);
     var delta_ = event_.getDragDelta();
     var zoom_ = event_.getDragZoom(); 
+    var touches_ = event_.getDragTouches(); 
     var azimuthDistance_ = this.getAzimuthAndDistance(delta_[0], delta_[1]);
     
     var modifierKey_ = (this.browser_.controlMode_.altKey_
                || this.browser_.controlMode_.shiftKey_
                || this.browser_.controlMode_.ctrlKey_);
 
-    if (zoom_ != 0) {
-        var factor_ = 1.0 + (zoom_ > 1.0 ? -1 : 1)*0.05;
-        
+
+    if (touches_ == 2 && /*event_.getDragButton("middle")*/ zoom_ != 0 && this.config_.zoomAllowed_) {
         if (map_.getPositionViewMode(pos_) != "obj") {
             return;
         }
+
+        var factor_ = 1.0 + (zoom_ > 1.0 ? -1 : 1)*0.01;
+        //var factor_ = 1.0 + (delta_[1] > 1.0 ? -1 : 1)*0.025;
         
         this.viewExtentDeltas_.push(factor_);
         this.reduceFloatingHeight(0.8);
@@ -65,10 +69,10 @@ Melown.ControlMode.MapObserver.prototype.drag = function(event_) {
             this.coordsDeltas_.push(forward_);
             this.reduceFloatingHeight(0.9);
         }
-    } else if ((event_.getDragButton("right") || modifierKey_) 
+    } else if (((touches_ <= 1 && event_.getDragButton("right")) || event_.getDragButton("middle") || modifierKey_) 
                && this.config_.rotationAllowed_) { //rotate
                    
-        var sensitivity_ = 0.4;
+        var sensitivity_ = 0.3;
         this.orientationDeltas_.push([-delta_[0] * sensitivity_,
                                       -delta_[1] * sensitivity_, 0]);
     }
@@ -90,6 +94,29 @@ Melown.ControlMode.MapObserver.prototype.wheel = function(event_) {
     
     this.viewExtentDeltas_.push(factor_);
     this.reduceFloatingHeight(0.8);
+};
+
+Melown.ControlMode.MapObserver.prototype.doubleclick = function(event_) {
+    var map_ = this.browser_.getMap();
+    if (!map_ || !this.config_.jumpAllowed_) {
+        return;
+    }
+
+    var coords_ = event_.getMouseCoords();
+
+    //get hit coords with fixed height
+    var mapCoords_ = map_.getHitCoords(coords_[0], coords_[1], "fix");
+    
+    if (mapCoords_) {
+        var pos_ = map_.getPosition();
+        pos_ = map_.setPositionCoords(pos_, mapCoords_);
+        pos_ = map_.convertPositionHeightMode(pos_, "fix");
+        pos_ = map_.setPositionHeight(pos_, mapCoords_[2]);
+        //pos_ = map_.convertPositionHeightMode(pos_, "fix");
+        //pos_ = map_.setPositionHeight(pos_, 0);
+        
+        this.browser_.autopilot_.flyTo(pos_, {"mode" : "direct", "maxDuration" : 2000 });
+    }
 };
 
 Melown.ControlMode.MapObserver.prototype.keyup = function(event_) {
@@ -161,6 +188,8 @@ Melown.ControlMode.MapObserver.prototype.tick = function(event_) {
     var pos_ = map_.getPosition();
     var update_ = false;
     var inertia_ = [0.8, 0.8, 0.7]; 
+    //var inertia_ = [0.95, 0.8, 0.8]; 
+    //var inertia_ = [0, 0, 0]; 
 
     //process coords deltas
     if (this.coordsDeltas_.length > 0) {
@@ -175,13 +204,22 @@ Melown.ControlMode.MapObserver.prototype.tick = function(event_) {
             var coords2_ = [delta_[4], delta_[5]];
             
             var azimuth_ = delta_[3];
-            azimuth_ += 0;
+            azimuth_ += 0;//map_.getAzimuthCorrection(coords2_, coords_);
             azimuth_ = Melown.radians(azimuth_);
+
+            //console.log("correction: " + map_.getAzimuthCorrection(coords2_, coords_) + " coords2: " + JSON.stringify(coords2_) + " coords: " + JSON.stringify(coords_));
+
 
             forward_[0] += -Math.sin(azimuth_) * delta_[2];  
             forward_[1] += Math.cos(azimuth_) * delta_[2];
 
+
+            /*
+            forward_[0] += delta_[0] * delta_[2];  
+            forward_[1] += delta_[1] * delta_[2];
+            */
             delta_[2] *= inertia_[0];
+
             
             //remove zero deltas
             if (delta_[2] < 0.01) {
@@ -193,6 +231,8 @@ Melown.ControlMode.MapObserver.prototype.tick = function(event_) {
         var distance_ = Math.sqrt(forward_[0]*forward_[0] + forward_[1]*forward_[1]);
         var azimuth_ = Melown.degrees(Math.atan2(forward_[0], forward_[1]));
     
+        //console.log("tick: " + azimuth_ + " " + distance_);
+
         //apply final azimuth and distance
         if (this.config_.navigationMode_ == "free") { 
             var correction_ = map_.getPositionOrientation(pos_)[0];
@@ -202,10 +242,59 @@ Melown.ControlMode.MapObserver.prototype.tick = function(event_) {
         } else { // "azimuthal" 
 
             var correction_ = map_.getPositionOrientation(pos_)[0];
+            //pos_ = map_.movePositionCoordsTo(pos_, (this.isNavigationSRSProjected() ? -1 : 1) * azimuth_, distance_, true);
+            
+            
+            //var correctionFactor_ = Math.min(5, Math.max(0, Math.abs(coords_[1]) - 75)) / 5;
+            
+            //pos_ = map_.movePositionCoordsTo(pos_, (this.isNavigationSRSProjected() ? -1 : 1) * azimuth_, distance_, (Math.abs(coords_[1]) < 70));
             pos_ = map_.movePositionCoordsTo(pos_, (this.isNavigationSRSProjected() ? -1 : 1) * azimuth_, distance_, (Math.abs(coords_[1]) < 75) ? 0 : 1);
+            //pos_ = map_.movePositionCoordsTo(pos_, (this.isNavigationSRSProjected() ? -1 : 1) * azimuth_, distance_, correctionFactor_);
 
             correction_ = map_.getPositionOrientation(pos_)[0] - correction_;
+
+            //if (Math.abs(coords_[1]) < 70) {
+
+/*
+            var orientation_ = map_.getPositionOrientation(pos_);
+            //orientation_[0] *= 0.5  + 0.5 * (Math.max(0, orientation_[1] - 70) / 30);
+            //pos_ = map_.setPositionOrientation(pos_, orientation_);
+            
+            if (Math.abs(coords_[1]) < 70) {
+                if (!event_.draggingState_["dragging"]) {
+                    orientation_[0] *= 0.5;
+                    pos_ = map_.setPositionOrientation(pos_, orientation_);
+                }
+            }
+            
+*/
+
+            /*
+            var correction_ = 0; //HACK
+
+            var coords_ = map_.getPositionCoords(pos_);
+            
+            var rf_ = map_.getReferenceFrame();
+            var srs_ = map_.getSrsInfo(rf_["navigationSrs"]);
+            
+            fx_ = Melown.degrees((forward_[0] / (srs_["a"] * 2) * Math.PI) * Math.PI * 2) * 0.25;             
+            fy_ = Melown.degrees((forward_[1] / (srs_["b"] * 2) * Math.PI) * Math.PI * 2) * 0.25;
+            
+            coords_[0] += fx_;    
+            coords_[1] += fy_;
+            
+            if (Math.abs(coords_[1]) < 80) { || Math.abs(map_.getPositionOrientation(pos_)[0]) < 1) {
+                //coords_[0] %= 180;
+                //coords_[1] %= 90;
+                pos_ = map_.setPositionCoords(pos_, coords_);
+            } else {
+                pos_ = map_.movePositionCoordsTo(pos_, (this.isNavigationSRSProjected() ? -1 : 1) * azimuth_, distance_, true);
+            }*/
         }
+        
+        
+
+        //console.log("correction2: " + correction_);
 
         for (var i = 0; i < deltas_.length; i++) {
             var delta_ = deltas_[i];
