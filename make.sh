@@ -3,6 +3,10 @@
 cat lib/melown-core-v1-min.js \
     src/utility/utility.js \
     src/utility/dom.js \
+    src/presenter/presenter.js \
+    src/presenter/creator.js \
+    src/presenter/render.js \
+    src/presenter/handlers.js \
     src/autopilot/autopilot.js \
     src/rois/rois.js \
     src/ui/control/compass.js \
@@ -30,6 +34,9 @@ cat lib/melown-core-v1-min.js \
     src/config.js \
     src/interface.js > build/melown-v1.js
 
-# copy css
-cp src/browser.css build/melown-v1.css
+# merge css
+cat src/presenter/css/main.css \
+    src/presenter/css/panel.css \
+    src/presenter/css/subtitles.css \
+    src/browser.css > build/melown-v1.css
 
