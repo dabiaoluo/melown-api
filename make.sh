@@ -18,6 +18,7 @@ cat lib/melown-core-v1-min.js \
     src/ui/control/scale.js \
     src/ui/control/map.js \
     src/ui/control/zoom.js \
+    src/ui/control/popup.js \
     src/ui/control/space.js \
     src/ui/control/link.js \
     src/ui/control/navigation.js \
