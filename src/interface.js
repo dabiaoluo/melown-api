@@ -14,48 +14,62 @@ Melown.BrowserInterface = function(element_, config_) {
     this.ui_ = this.browser_.ui_;
     this.autopilot_ = this.browser_.autopilot_;
     this.presenter_ = this.browser_.presenter_;
+    this.killed_ = false;
     this.core_.on("map-loaded", (function(){ this.map_ = this.core_.getMap(); }).bind(this));
     this.core_.on("map-unloaded", (function(){ this.map_ = null; }).bind(this));    
 };
 
 Melown.BrowserInterface.prototype.getPresenter = function() {
+    if (this.killed_) return;
     return this.presenter_;
 };
 
 Melown.BrowserInterface.prototype.getRenderer = function() {
+    if (this.killed_) return;
     return this.core_.getRenderer();
 };
 
 Melown.BrowserInterface.prototype.getProj4 = function() {
+    if (this.killed_) return;
     return this.core_.getProj4();
 };
 
 Melown.BrowserInterface.prototype.getUI = function() {
+    if (this.killed_) return;
     return this.ui_;
 };
 
 Melown.BrowserInterface.prototype.destroy = function() {
+    if (this.killed_) return;
     this.core_.destroy();
     this.map_ = null;
     this.browser_.killed_ = true;
-    return this;    
+    this.ui_.kill();
+    this.ui_ = null;
+    this.core_ = null;
+    this.killed_ = true;
+    return null;    
 };
 
 Melown.BrowserInterface.prototype.setControlMode = function(mode_) {
+    if (this.killed_) return;
     this.browser_.controlMode_ = mode_;
     return this;    
 };
 
 Melown.BrowserInterface.prototype.getControlMode = function() {
+    if (this.killed_) return;
     return this.browser_.controlMode_;
 };
 
 Melown.BrowserInterface.prototype.loadMap = function(path_) {
+    if (this.killed_) return;
     this.core_.loadMap(path_);
     return this;    
 };
 
 Melown.BrowserInterface.prototype.destroyMap = function() {
+    if (this.killed_) return;
     this.core_.destroyMap();
     this.map_ = null;
     return this;    

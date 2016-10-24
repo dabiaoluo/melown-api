@@ -22,7 +22,7 @@ Melown.Autopilot = function(browser_) {
 
 Melown.Autopilot.prototype.setAutorotate = function(speed_) {
     if (this.autoRotate_ != speed_) {
-        this.browser_.callListener("autotate-changed", { "autorotate" : speed_});
+        this.browser_.callListener("autorotate-changed", { "autorotate" : speed_});
     }
 
     this.autoRotate_ = speed_;
@@ -70,6 +70,7 @@ Melown.Autopilot.prototype.flyTrajectory = function(trajectory_, sampleDuration_
 };
 
 Melown.Autopilot.prototype.cancelFlight = function() {
+    this.browser_.getControlMode().setCurrentControlMode(this.lastControlMode_);
     this.finished_ = true;
 };
 
