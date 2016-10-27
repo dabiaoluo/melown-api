@@ -86,7 +86,7 @@ Melown.BrowserInterface.prototype.getPosition = function() {
     return this.map_.getPosition();
 };
 
-Melown.BrowserInterface.prototype.getPositionCredits = function() {
+Melown.BrowserInterface.prototype.getCurrentCredits = function() {
     if(!this.map_) return;
     return this.map_.getCurrentCredits();
 };
@@ -317,6 +317,11 @@ Melown.BrowserInterface.prototype.getCameraInfo = function() {
     return this.map_.getCameraInfo();
 };
 
+Melown.BrowserInterface.prototype.getMapStats = function() {
+    if(!this.map_) return;
+    return this.map_.getStats();
+};
+
 Melown.BrowserInterface.prototype.isPointInsideCameraFrustum = function(point_) {
     if(!this.map_) return;
     return this.map_.isPointInsideCameraFrustum(point_);
@@ -541,6 +546,7 @@ Melown.BrowserInterface.prototype["getSurfaceHeight"] = Melown.BrowserInterface.
 Melown.BrowserInterface.prototype["getDistance"] = Melown.BrowserInterface.prototype.getDistance;
 Melown.BrowserInterface.prototype["getAzimuthCorrection"] = Melown.BrowserInterface.prototype.getAzimuthCorrection; 
 Melown.BrowserInterface.prototype["getCameraInfo"] = Melown.BrowserInterface.prototype.getCameraInfo;
+Melown.BrowserInterface.prototype["getMapStats"] = Melown.BrowserInterface.prototype.getMapStats;
 Melown.BrowserInterface.prototype["isPointInsideCameraFrustum"] = Melown.BrowserInterface.prototype.isPointInsideCameraFrustum;
 Melown.BrowserInterface.prototype["isBBoxInsideCameraFrustum"] = Melown.BrowserInterface.prototype.isBBoxInsideCameraFrustum;
 Melown.BrowserInterface.prototype["generateTrajectory"] = Melown.BrowserInterface.prototype.generateTrajectory; 
