@@ -90,7 +90,8 @@ Melown.UIControlLoading.prototype.update = function() {
 
     if ((stats_["surfaces"] == 0 && stats_["freeLayers"] == 0) ||  //nothing to load 
         (stats_["downloading"] == 0 && stats_["lastDownload"] > 0 && (timer_ - stats_["lastDownload"]) > 1000) || //or everything loaded
-        (stats_["bestMeshTexelSize"] != 0 && stats_["bestMeshTexelSize"] <= (stats_["texelSizeFit"] * 3))) { //or resolution is good enough
+        (stats_["bestMeshTexelSize"] != 0 && stats_["bestMeshTexelSize"] <= (stats_["texelSizeFit"] * 3) || //or resolution is good enough
+        (stats_["loadMode"] == "fit" || stats_["loadMode"] == "fitonly") && stats_["drawnTiles"] > 1) ) { //or at leas some tiles are loaded
         this.hide();
     }
 

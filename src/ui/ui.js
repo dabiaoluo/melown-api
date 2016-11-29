@@ -22,7 +22,7 @@ Melown.UI.prototype.init = function() {
     this.map_ = new Melown.UIControlMap(this);
    
     //create other ui controls
-    var loading_ = true;
+    var loading_ = this.config_.controlLoading_;
     this.compass_ = new Melown.UIControlCompass(this, (!loading_ && this.config_.controlCompass_));
     this.credits_ = new Melown.UIControlCredits(this, (!loading_ && this.config_.controlCredits_));
     //this.logo_ = new Melown.UIControlLogo(this, this.config_.controlLogo_);
