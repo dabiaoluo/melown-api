@@ -5,7 +5,7 @@ var list = null;
 
 function startDemo() {
     browser = Melown.MapBrowser("map-div", {
-        map : "https://demo.iris-test.citationtech.net/public-maps/grand-ev/mapConfig.json",
+        map : "https://demo.test.mlwn.se/public-maps/grand-ev/mapConfig.json",
         position : [ "obj", 1683559, 6604129, "float", 0, -13, -58, 0, 3764, 90 ]
     });
     
