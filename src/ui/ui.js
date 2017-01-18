@@ -28,6 +28,7 @@ Melown.UI.prototype.init = function() {
     //this.logo_ = new Melown.UIControlLogo(this, this.config_.controlLogo_);
     this.zoom_ = new Melown.UIControlZoom(this, (!loading_ && this.config_.controlZoom_));
     this.space_ = new Melown.UIControlSpace(this, (!loading_ && this.config_.controlSpace_));
+    this.search_ = new Melown.UIControlSearch(this, (!loading_ && this.config_.controlSearch_));
     this.link_ = new Melown.UIControlLink(this, (!loading_ && this.config_.controlLink_));
     //this.navigator_ = new Melown.UIControlNavigation(this, this.config_.controlNavigator_);
     this.layers_ = new Melown.UIControlLayers(this, (!loading_ && this.config_.controlLayers_));
@@ -96,6 +97,7 @@ Melown.UI.prototype.setParam = function(key_) {
         case "controlScale":       this.setControlVisible("scale", this.config_.controlScale_); break;
         case "controlLayers":      this.setControlVisible("layers", this.config_.controlLayers_); break;
         case "controlSpace":       this.setControlVisible("space", this.config_.controlSpace_); break;
+        case "controlSearch":      this.setControlVisible("search", this.config_.controlSearch_); break;
         case "controlLink":        this.setControlVisible("link", this.config_.controlLink_); break;
         case "controlLogo":        this.setControlVisible("logo", this.config_.controlLogo_); break;
         case "controlCredits":     this.setControlVisible("credits", this.config_.controlCredits_); break;
