@@ -11,6 +11,7 @@ cat lib/melown-core-v1-min.js \
     src/rois/rois.js \
     src/ui/control/compass.js \
     src/ui/control/credits.js \
+    src/ui/control/fullscreen.js \
     src/ui/control/layers.js \
     src/ui/control/fallback.js \
     src/ui/control/holder.js \

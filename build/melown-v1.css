@@ -1,6 +1,443 @@
+.melown-presenter p {
+    margin: 0;
+    padding: 0;
+}
+
+.melown-presenter button {
+    position: relative;
+    width: 140px;
+    height: 26px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    opacity: 1;
+}
+
+.melown-presenter button.hidden {
+    opacity: 0;
+    cursor: default;
+}
+
+.melown-presenter.top-toolbox button {
+    float: left;
+}
+
+.melown-presenter.widget .input-wrap {
+    margin: 10px 10px 0px 10px;
+    width: 180px;
+    min-height: 16px;
+}
+
+.melown-presenter.widget .input-wrap label {
+    font-size: 12px;
+    height: 20px;
+    width: 144px;
+    margin-right: 10px;
+    display: block;
+    float: left;
+    font-weight: bold;
+}
+
+.melown-presenter.input-wrap input[type='range'] {
+    margin-right: 10px;
+    width: 80px;
+    display: block;
+    float: left;
+}
+
+.melown-presenter.input-wrap span.value {
+    font-size: 12px;
+    width: 20px;
+    display: block;
+}
+
+.melown-presenter.widget .input-wrap.nested {
+    margin-left: 24px;
+    width: 166px;
+}
+
+.melown-presenter.widget .input-wrap.nested label {
+    width: 130px;
+    font-weight: normal;
+}
+
+.melown-presenter.section {
+    margin: 0px 0px 26px 0px;
+}
+
+.melown-presenter button, .melown-presenter button:hover {
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.melown-presenter.panelContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 355px;
+    min-height: 50px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 3px;
+    overflow: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 1s ease;
+    -moz-transition: opacity 1s ease;
+    transition: opacity 1s ease;   
+}
+
+.melown-presenter.toolboxContainer {
+    position: absolute;
+    min-height: 50px;
+    overflow: hidden;
+    height: 0;
+    opacity: 1;
+    padding: 0 25px;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    transition: all 0.6s ease;
+}
+
+.melown-presenter.toolboxContainer article {
+    position: relative;
+    padding: 0;
+    margin-top: 20px;
+    top: 0;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    transition: all 0.6s ease;
+}
+
+.melown-presenter.toolboxContainer article.nonFirst {
+    margin-top: -60px;
+}
+
+.melown-presenter.toolboxContainer section {
+    font-family: 'Open Sans',Verdana,Arial,Tahoma,Calibri,Geneva,sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    width: 305px;
+    min-height: 200px;
+    max-height: 800px;
+    margin: 0;
+    position: relative;
+    vertical-align: top;
+}
+
+.melown-presenter.panelContainer div.swipeControl {
+    position: absolute;
+    top: 70px;
+    height: 60px;
+    width: 355px;
+    text-align: center;
+    opacity: 0;
+    overflow: hidden;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    transition: all 0.6s ease;
+}
+
+.melown-presenter.panelContainer div.swipeControl.top {
+    top : 0;
+}
+
+.melown-presenter.toolboxContainer img {
+    max-width: 295px;
+    border-radius: 3px;
+    border: double 5px rgb(216, 216, 216);
+}
+
+.melown-presenter .melown-presenter-btnUp {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    margin-left: -70px;
+}
+
+.melown-presenter .melown-presenter-btnUp div, .melown-presenter .melown-presenter-btnDw div {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 18px;
+    overflow: hidden;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.melown-presenter .melown-presenter-btnUp div div, .melown-presenter .melown-presenter-btnDw div div {
+    background-color: #000;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    margin-left: -10px;
+    border-radius: 1px;
+    box-shadow: 0 0 2px #000;
+}
+
+.melown-presenter .melown-presenter-btnUp div div {
+    top: 6px;
+}
+
+.melown-presenter .melown-presenter-btnUp div:hover {
+    top: -2px;
+}
+
+.melown-presenter .melown-presenter-btnDw div:hover {
+    top: 2px;
+}
+
+.melown-presenter .melown-presenter-btnUp div div:hover {
+    top: 6px;
+}
+
+.melown-presenter .melown-presenter-btnDw div div:hover {
+    top: -8px;
+}
+
+.melown-presenter .melown-presenter-btnDw {
+    position: absolute;
+    top: 23px;
+    left: 50%;
+    margin-left: -70px;
+}
+
+.melown-presenter.toolboxContainer section.hidden {
+    max-height: 0px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.melown-presenter.toolboxContainer section h3 {
+    font-weight: 300;
+    font-size: 18px;
+    margin: 0;
+    padding: 15px 0 15px;
+}
+
+.melown-presenter.toolboxContainer section h4 {
+    margin: 0;
+    padding: 10px 0 10px 0;
+    font-size: 15px;
+}
+
+.melown-presenter.toolboxContainer section a, .melown-presenter.toolboxContainer section p a {
+    color: #0066ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.melown-presenter.toolboxContainer section a:hover, .melown-presenter.toolboxContainer section p a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.melown-presenter.subtitlesContainer {
+    display: none;
+    position: absolute;
+    left: 10%;
+    bottom: 5%;
+    width: 76%;
+    height: 76%;
+    padding: 2%;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.9);
+    overflow: hidden;
+    font-family: helvetica, arial, sans-serif;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    transition: all 0.6s ease;
+}
+
+.melown-presenter.subtitlesContainer.full {
+    left: 10%;
+    bottom: 5%;
+    width: 76%;
+    height: 76%;
+    padding: 2%;
+}
+
+.melown-presenter.subtitlesContainer.title {
+    bottom : 10%;
+    width: 76%;
+    height: 50%;
+    padding: 2%;
+}
+
+.melown-presenter.subtitlesContainer.mini {
+    left: 50%;
+    bottom: 5%;
+    width: 260px;
+    margin-left: -100px;
+    height: 15px;
+    padding: 20px 20px;
+    cursor: pointer;
+}
+
+.melown-presenter.subtitlesContainer button {
+    min-width: 200px;
+    width: auto;
+    height: auto;
+    position: absolute;
+    bottom: 4%;
+    right: 5%;
+    background-color: rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.5);
+    font-size: 2vmax;
+    padding: 10px 20px;
+    border-radius: 3px;
+    z-index: 2;
+    -webkit-transition-delay: 0.4s;
+    -moz-transition-delay: 0.4s;
+    transition-delay: 0.4s;
+}
+
+.melown-presenter.subtitlesContainer button:nth-of-type(1) {
+    left: 5%;
+}
+
+.melown-presenter.subtitlesContainer button.hidden {
+    bottom: -70px;
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    transition-delay: 0s;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles {
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    left: 100%;
+    margin-left: -50px;
+    width: 35px;
+    height: 60px;
+    opacity: 0;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles div {
+    position: absolute;
+    width: 35px;
+    height: 59px;
+    overflow: hidden;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles div div {
+    width: 60px;
+    height: 60px;
+    background-color: #000;
+    transform: rotate(45deg);
+    border-radius: 5px;
+    position: absolute;
+    left: -40px;
+    top: 0px;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles:nth-of-type(1) {
+    left: 20px;
+    margin-left: 0;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles:nth-of-type(1) div div {
+    left: 15px;
+}
+
+.melown-presenter.subtitlesContainer .swipeSubtitles:hover {
+    margin-left: -45px;
+} 
+
+.melown-presenter.subtitlesContainer .swipeSubtitles:nth-of-type(1):hover {
+    left : 15px;
+    margin-left: 0;
+} 
+
+.melown-presenter.subtitlesContainer .swipeSubtitles.hidden {
+    opacity: 0;
+    cursor: default;
+}
+
+.melown-presenter.subtitlesContainer .innerContainer {
+    padding: 0 40px;
+}
+
+.melown-presenter.subtitlesContainer article {
+    position: relative;
+    top: 0;
+}
+
+.melown-presenter.subtitlesContainer section {
+    opacity: 0;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.melown-presenter.subtitlesContainer .innerContainer h3 {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 40px;
+}
+
+.melown-presenter.subtitlesContainer .innerContainer h4 {
+    text-align: center;
+    margin: 10px 0;
+    font-weight: normal;
+    font-size: 30px;
+}
+
+.melown-presenter.subtitlesContainer .innerContainer p {
+    font-size: 27px;
+}
+
+.melown-presenter.subtitlesContainer.mini .innerContainer section p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.melown-presenter.subtitlesContainer img {
+    margin: 10px 0;
+    border-radius: 3px;
+    width: 550px;
+    position: relative;
+    left: 50%;
+    margin-left: -275px;
+}
+
+.melown-presenter.subtitlesContainer section a, .melown-presenter.subtitlesContainer section p a {
+    color: #002266;
+    border-bottom: dotted 2px #003399;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.melown-presenter.subtitlesContainer section a:hover, .melown-presenter.subtitlesContainer section p a:hover {
+    cursor: pointer;
+}
+
+
+.melown-browser {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.melown-browser * {
+    box-sizing: border-box;
+}
 
 /*
- * LOGO
+ * MAP
  */
 
 .melown-map {
@@ -16,11 +453,40 @@
  */
 
 .melown-logo {
-    font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
-    font-size:11px;
-    position:absolute;right:5px;bottom:5px;
     color:#fff;
     text-shadow: 0 0 2px #000;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    padding-bottom: 0px;    
+    margin-right: 10px;    
+}
+
+
+/*
+ * POPUP
+ */
+
+.melown-popup-background {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    z-index: 5;
+    position:absolute;
+    background-color: rgba(0,0,0,0.5);    
+}
+
+#melown-popup {
+    position:absolute;
+    z-index: 6;
+    padding: 5px;
+    font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
+    font-size: 11px;
+    color:#000;
+    border-radius: 2px;
+    background-color: #fff;
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
 /*
@@ -28,35 +494,80 @@
  */
 
 .melown-credits {
-    position:absolute;
-    left:3px;
-    top:3px;
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
     z-index: 4;
-}
-
-.melown-credits ul {
-    padding: 7px 0px;
+    padding: 0px 0px;
     margin: 0px;
-    text-align: left;
-}
-
-.melown-credits ul li {
+    text-align: right;
     color: #FFFFFF;
     font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
     font-size: 11px;
-    display: inline;
-    list-style-type: none;
-    padding-right: 10px;
-    padding-left: 10px;
-    border-right: 1px solid rgba(255,255,255,0.3);
-    padding-top: 2px;
-    padding-bottom: 2px;
-    text-shadow: 0 0 2px #000;
+    left: 120px;
+    overflow: hidden;    
 }
 
-.melown-credits ul li a {
-    color: #FFFFFF;
+.melown-credits-supercell {
+    display: inline-block;
+    text-shadow: 0 0 2px #000;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 5px;
 }
+
+.melown-credits-cell {
+    display: inline-block;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    text-shadow: 0 0 2px #000;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.melown-credits-cell a {
+    color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    margin: 0px;
+}
+
+.melown-credits-cell-button {
+    display: inline-block;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    text-shadow: 0 0 2px #000;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    margin-left: 5px;
+}
+
+.melown-credits-separator {
+    display: inline-block;
+    width : 1px;
+    height : 14px;
+    background-color: rgba(255,255,255,0.4);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.melown-credits-list {
+    line-height:150%;
+}
+
+.melown-credits-list a {
+    color: #000;
+}
+
 
 #vadstena-engine-credits a {
     color: #FFFFFF;
@@ -77,6 +588,7 @@
     display: none;
     font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
     color:#ddd;
+    z-index: 7
 }
 
 .melown-fallback-text {
@@ -96,6 +608,107 @@
     padding: 3px;
     margin: 0px;
 }
+
+/*
+ * SEARCH
+ */
+
+.melown-search {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+}
+
+.melown-search input[type="text"] {
+    padding: 5px 5px 5px 25px;
+    border-radius: 1px;
+    border: none;
+    background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAAlwSFlzAAAGnQAABp0B6C+u5gAAActpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+d3d3Lmlua3NjYXBlLm9yZzwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KGMtVWAAAAetJREFUSA3tUz1LQmEU9noD4zYINaRLiFtrS0tSjtXW4NAQ6tAdosW5wTUcAoNCFD+WCqHAQRothKDRsSjEXyBFSVLe2/PAfeFyvxAhWnzhcN73nOc85+Oe6/NNz39PQBqngFqttqDrekRRlKdEIvExTozAeCaoVCo7AOYkSYoaATp0R9O0g3Q6/SBIvLTfzVmtVs9AfA15RvV7fr8/Bq1CNNjaSJ5xizXbHTtg5SQHMJNMJk/MAa1Wa6bX653DlkQna+jk0ey33t06yAF4ayVncDwe/0EXh5BXdHVkJbS+bQn4QVF9FASXVrB4p1KpL9yvgYlls1kbh8BR25wIitAhy3KX2u2g+i4KCYbDYdkNQ7stAVcRdn00Gi17BWL+9PdVVf32wtkSGHveQXX79XrdsbpSqTQP/y6IG17k9NkS0Mg9x6hWBoPBaT6fD9AmDskxvgu8Q8DcCLubdlxTgrnnqPIY1xcSceYci1F5iBjYB1Db+Oh3fDsd1wQEl8vlVa4iiGIgDsLUhzSMyq9gU5gEsoX/4Z4x1uOZQIC5itwW8wdFhxvwN5kE+hNJNtFJW8QIPVYCAbZqdLiODpuwz0Heh8PhEop4M+McP7IZ4HXnWFg5yaEDSDbrhZ/YVygUgsVicXFigmngn07gF2iNwr51RjszAAAAAElFTkSuQmCC),none;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    height: 26px;
+    font-size: 16px;
+}
+
+.melown-search input[type="text"]:focus {
+    outline: none;
+}
+
+.melown-search-input {
+    border-radius: 3px;
+    border: 2px solid rgba(255, 255, 255, 0.47);
+    position: absolute;
+}
+
+.melown-search-list {
+    font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 3px;
+    white-space: nowrap;
+    display: none;
+    cursor: default;
+    position: relative;
+    top: 33px;
+    color: #000;    
+}
+
+.melown-search-listitem {
+    padding: 6px 15px;
+}
+
+.melown-search-listitem-selected {
+    padding: 6px 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+/*
+.melown-search-listitem:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 3px;
+}*/
+
+/*
+ * LOADING
+ */
+
+.melown-loading {
+    position: absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    background-color: rgba(255,255,255,0.75);
+    font-family: Verdana, Tahoma, Geneva, Arial, Sans-serif;
+    color:#ddd;
+    z-index: 5;    
+}
+
+.melown-loading-progress {
+    width: 50%;
+    left: 25%;
+    position: absolute;
+    height: 10%;
+    top: 45%;
+    text-align: center;
+}
+
+.melown-loading-dot {
+    display: inline-block;
+    background-color: #333;
+    border-radius: 999px;
+    /*margin: 0.6%;
+    padding: 1%;*/
+    margin: 0.9%;
+    padding: 1.5%;
+
+    position: relative;
+    top: 33%;
+}
+
 
 /*
  * COMPASS
@@ -175,6 +788,7 @@
 }
 
 .melown-zoom-plus img {
+    display: block;
     border-radius: 2px;
     background-color: #fff;
 }
@@ -191,6 +805,7 @@
 }
 
 .melown-zoom-minus img {
+    display: block;
     border-radius: 2px;
     background-color: #fff;
 }
@@ -236,6 +851,7 @@
 }
 
 .melown-link-button img {
+    display: block;
     border-radius: 2px;
     background-color: #fff;
 }
@@ -262,4 +878,16 @@
     padding: 5px;
 }
 
+/*
+ * FULLSCREEN
+ */
 
+.melown-fullscreen {
+    position:absolute;
+    right:7px;
+    top:7px;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    z-index: 10;
+}
