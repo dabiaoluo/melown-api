@@ -11,6 +11,7 @@ cat lib/melown-core-v1-min.js \
     src/rois/rois.js \
     src/ui/control/compass.js \
     src/ui/control/credits.js \
+    src/ui/control/loading.js \
     src/ui/control/fullscreen.js \
     src/ui/control/layers.js \
     src/ui/control/fallback.js \
@@ -21,6 +22,7 @@ cat lib/melown-core-v1-min.js \
     src/ui/control/zoom.js \
     src/ui/control/popup.js \
     src/ui/control/space.js \
+    src/ui/control/search.js \
     src/ui/control/link.js \
     src/ui/control/navigation.js \
     src/ui/element/element.js \

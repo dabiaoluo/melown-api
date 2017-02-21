@@ -1729,6 +1729,118 @@ Melown.UIControlCredits.prototype.onMoreButton = function(butt_, html_) {
 /**
  * @constructor
  */
+Melown.UIControlLoading = function(ui_, visible_) {
+    this.ui_ = ui_;
+    this.control_ = this.ui_.addControl("loading",
+      '<div id="melown-loading" class="melown-loading">'
+
+        + '<div class="melown-loading-progress">'
+            + '<div id="melown-loading-dot1" class="melown-loading-dot"></div>'
+            + '<div id="melown-loading-dot2" class="melown-loading-dot"></div>'
+            + '<div id="melown-loading-dot3" class="melown-loading-dot"></div>'
+            + '<div id="melown-loading-dot4" class="melown-loading-dot"></div>'
+            + '<div id="melown-loading-dot5" class="melown-loading-dot"></div>'
+        + '</div>'
+
+      + ' </div>', visible_);
+
+    this.loading_ = this.control_.getElement("melown-loading");
+    this.dots_ = [
+        this.control_.getElement("melown-loading-dot1"),
+        this.control_.getElement("melown-loading-dot2"),
+        this.control_.getElement("melown-loading-dot3"),
+        this.control_.getElement("melown-loading-dot4"),
+        this.control_.getElement("melown-loading-dot5")
+    ];
+    
+    this.time_ = Date.now();
+    this.hiding_ = null;
+    
+    //setTimeout(this.hide.bind(this), 5000);
+};
+
+Melown.UIControlLoading.prototype.show = function() {
+    this.hiding_ = null;
+    this.ui_.setControlVisible("compass", false);
+    this.ui_.setControlVisible("zoom", false);
+    this.ui_.setControlVisible("space", false);
+    this.ui_.setControlVisible("search", false);
+    this.ui_.setControlVisible("link", false);
+    this.ui_.setControlVisible("fullscreen", false);
+    this.ui_.setControlVisible("credits", false);
+    this.ui_.setControlVisible("loading", true);
+};
+
+Melown.UIControlLoading.prototype.hide = function() {
+    this.hiding_ = Date.now();
+    
+    var search_ = this.ui_.config_.controlSearch_;
+    if (search_) { //enable search for melown2015 reference frame only
+        var map_ = this.ui_.browser_.getMap();
+        if (map_) {
+            search_ = (map_.getReferenceFrame()["id"] == "melown2015");
+        }
+    } 
+    
+    this.ui_.setControlVisible("compass", this.ui_.config_.controlCompass_);
+    this.ui_.setControlVisible("zoom", this.ui_.config_.controlZoom_);
+    this.ui_.setControlVisible("space", this.ui_.config_.controlSpace_);
+    this.ui_.setControlVisible("search", search_);
+    this.ui_.setControlVisible("link", this.ui_.config_.controlLink_);
+    this.ui_.setControlVisible("fullscreen", this.ui_.config_.controlFullscreen_);
+    this.ui_.setControlVisible("credits", this.ui_.config_.controlCredits_);
+    this.ui_.setControlVisible("loading", false);
+};
+
+Melown.UIControlLoading.prototype.update = function() {
+    var timer_ = Date.now();
+
+    if (this.hiding_) { 
+        var timeDelta_ = (timer_ - this.hiding_) * 0.001;
+        this.loading_.setStyle("opacity", (1-Math.min(1.0, timeDelta_*2)) + "" );
+        
+        if (timeDelta_ > 0.5) {
+            this.control_.setVisible(false);
+        }
+    }
+
+
+    var timeDelta_ = (timer_ - this.time_) * 0.001;
+
+    //sine wave
+    /*
+    for (var i = 0; i < 5; i++) {
+        this.dots_[i].setStyle("top", (Math.sin(((Math.PI*1.5)/5)*i+timeDelta_*Math.PI*2)*10)+"%");
+    }*/
+
+    //opacity    
+    for (var i = 0; i < 5; i++) {
+        //this.dots_[i].setStyle("opacity", (Math.sin(((Math.PI*1.5)/5)*i+timeDelta_*Math.PI*2)*60+20)+"%");
+        this.dots_[i].setStyle("opacity", (Math.sin(((Math.PI*1.5)/5)*i-timeDelta_*Math.PI*2)*0.6+0.2));
+    }
+
+    var map_ = this.ui_.browser_.getMap();
+    if (map_ == null) {
+        return;
+    }
+
+    var stats_ = map_.getStats();
+    
+    //"bestMeshTexelSize" : this.map_.bestMeshTexelSize_,
+    //"bestGeodataTexelSize" : this.map_.bestGeodataTexelSize_, 
+    //console.log("drawnTiles: " + stats_["drawnTiles"] + "  geodata: " + stats_["drawnGeodataTiles"]);
+
+    if ((stats_["surfaces"] == 0 && stats_["freeLayers"] == 0) ||  //nothing to load 
+        (stats_["downloading"] == 0 && stats_["lastDownload"] > 0 && (timer_ - stats_["lastDownload"]) > 1000) || //or everything loaded
+        (stats_["bestMeshTexelSize"] != 0 && stats_["bestMeshTexelSize"] <= (stats_["texelSizeFit"] * 3) || //or resolution is good enough
+        (stats_["loadMode"] == "fit" || stats_["loadMode"] == "fitonly") && (stats_["drawnTiles"] - stats_["drawnGeodataTiles"]) > 1) ) { //or at leas some tiles are loaded
+        this.hide();
+    }
+
+};
+/**
+ * @constructor
+ */
 Melown.UIControlFullscreen = function(ui_, visible_) {
     this.ui_ = ui_;
     this.control_ = this.ui_.addControl("fullscreen",
@@ -2098,6 +2210,285 @@ Melown.UIControlSpace.prototype.update = function() {
 
         this.space3D_ = space3D_;
         this.display3D_ = space3D_;
+    }
+};
+
+
+/**
+ * @constructor
+ */
+Melown.UIControlSearch = function(ui_, visible_) {
+    this.ui_ = ui_;
+    this.browser_ = ui_.browser_;
+    
+    var element_ = this.browser_.config_.controlSearchElement_;
+    if (element_) {
+        if (typeof element_ === "string") {
+            element_ = document.getElementById(element_);
+        }
+    }
+    
+    this.control_ = this.ui_.addControl("search",
+      '<div class="melown-search">'
+      + '<div class="melown-search-input"><input type="text" id="melown-search-input" autocomplete="off" spellcheck="false" placeholder="Search location..."></div>'      
+      + '<div id="melown-search-list" class="melown-search-list"></div>'      
+      + '</div>', visible_, element_);
+
+    this.input_ = this.control_.getElement("melown-search-input");
+    
+    //this.input_.on("change", this.onChange.bind(this));
+    this.input_.on("input", this.onChange.bind(this));
+    this.input_.on("keydown", this.onKeyUp.bind(this));
+    this.input_.on("focus", this.onFocus.bind(this));
+    this.input_.on('mousedown', this.onDrag2.bind(this));
+    this.input_.on('mousewheel', this.onDrag.bind(this));
+
+    this.list_ = this.control_.getElement("melown-search-list");
+    this.list_.on('mousedown', this.onDrag2.bind(this));
+    this.list_.on('mousewheel', this.onDrag.bind(this));
+
+    this.mapControl_ = this.ui_.getMapControl();
+    this.mapElement_ = this.mapControl_.getMapElement();
+    this.mapElement_.on('mousedown', this.onDrag.bind(this), window);
+    this.mapElement_.on('mousewheel', this.onDrag.bind(this), window);
+
+    this.ignoreDrag_ = false; 
+
+    this.urlTemplate_ = "https://www.windytv.com/search/get/v1.0/{value}?lang=en-US&hash=b0f07fGWSGdsx-l";
+    this.data_ = [];
+    this.lastSearch_ = "";
+    this.itemIndex_ = -1;
+    this.searchCounter_ = 0;
+    this.coordsSrs_ = "+proj=longlat +datum=WGS84 +no_defs";
+
+    this.initialValueUsed_ = false;
+
+    if (this.browser_.config_.controlSearchValue_) {
+        this.initialValueUsed_ = true;
+        this.input_.getElement().value = this.browser_.config_.controlSearchValue_;
+        this.onChange();
+    }
+};
+
+Melown.UIControlSearch.prototype.processTemplate = function(str_, obj_) {
+    return str_.replace(/\{([_$a-zA-Z0-9][_$a-zA-Z0-9]*)\}/g, function(s, match_) {
+        return (match_ in obj_ ? obj_[match_] : s);
+    });
+};
+
+Melown.UIControlSearch.prototype.showList = function(event_) {
+    this.list_.setStyle("display", "block");
+};
+
+Melown.UIControlSearch.prototype.hideList = function(event_) {
+    //this.data_ = {};
+    this.list_.setStyle("display", "none");
+};
+
+Melown.UIControlSearch.prototype.moveSelector = function(delta_) {
+    //this.data_ = {};
+    this.itemIndex_ += delta_;
+
+    if (this.itemIndex_ >= this.data_.length) {
+        this.itemIndex_ = this.data_.length - 1;
+    }
+    
+    if (this.itemIndex_ < 0) {
+        this.itemIndex_ = 0;
+    }
+    
+    this.updateList({"data" : this.data_});
+};
+
+Melown.UIControlSearch.prototype.updateList = function(json_) {
+    if (json_["data"]) {
+        var list_ = "";
+        var data_ = json_["data"];
+        data_ = data_.slice(0,10);
+        this.data_ = data_; 
+        
+        for (var i = 0, li = data_.length; i < li; i++) {
+            var item_ = data_[i];
+
+            if (this.itemIndex_ == i) {
+                list_ += '<div id="melown-search-item' + i + '"'+ ' class="melown-search-listitem-selected">' + item_["title"] + ' ' + (item_["region"] ? item_["region"] : "") + '</div>';
+            } else {
+                list_ += '<div id="melown-search-item' + i + '"'+ ' class="melown-search-listitem">' + item_["title"] + ' ' + (item_["region"] ? item_["region"] : "") + '</div>';
+            }
+                
+        }
+        
+        this.list_.setHtml(list_);
+
+        for (var i = 0, li = data_.length; i < li; i++) {
+            var id_ = "melown-search-item" + i;
+            var item_ = this.control_.getElement(id_);
+            
+            if (item_) {
+                item_.on("click", this.onSelectItem.bind(this, i));
+                item_.on("mouseenter", this.onHoverItem.bind(this, i));
+            }
+        }
+
+        if (!this.initialValueUsed_) {
+            this.showList();
+        }
+    } else {
+        this.hideList();
+    }
+};
+
+Melown.UIControlSearch.prototype.onSelectItem = function(index_, event_) {
+    var map_ = this.browser_.getMap();
+    if (map_ == null) {
+        return;
+    }
+
+    var pos_ = map_.getPosition();
+    //var coords_ = map_.getPositionCoords(pos_);                
+
+    var item_ = this.data_[index_];
+    if (item_) {
+        var coords_ = [item_["lon"], item_["lat"]];
+        
+        //conver coords from location srs to map navigation srs         
+        var refFrame_ = map_.getReferenceFrame();
+        var navigationSrsId_ = refFrame_["navigationSrs"];
+        var navigationSrs_ = map_.getSrsInfo(navigationSrsId_);
+        
+        var proj4_ = this.browser_.getProj4();
+        coords_ = proj4_(this.coordsSrs_, navigationSrs_["srsDef"], coords_);
+
+        pos_ = map_.setPositionCoords(pos_, coords_);
+        
+        //try to guess view extent from location type
+        var viewExtent_ = 10000;                
+
+        switch(item_["type"]) {
+            case "peak": viewExtent_ = 20000; break;
+            case "city": viewExtent_ = 30000; break;                
+            case "street": viewExtent_ = 4000; break;
+            case "residential": viewExtent_ = 3000; break;               
+        }
+        
+        pos_ = map_.setPositionViewExtent(pos_, viewExtent_);                
+        pos_ = map_.setPositionOrientation(pos_, [0,-60,0]);                
+
+        map_.setPosition(pos_);
+        
+        this.itemIndex_ = index_;
+        this.lastSearch_ = item_["title"];
+        
+        var element_ = this.input_.getElement();  
+        element_.value = this.lastSearch_;
+        element_.blur(); //defocus 
+    }
+
+    this.hideList();
+};
+
+Melown.UIControlSearch.prototype.onHoverItem = function(index_, event_) {
+    if (this.itemIndex_ == index_) {
+        return;
+    }
+
+    this.itemIndex_ = index_;
+    this.updateList({"data" : this.data_});
+};
+
+Melown.UIControlSearch.prototype.onListLoaded = function(counter_, data_) {
+    if (this.searchCounter_ == counter_) {
+        this.updateList(data_);
+    }
+};
+
+Melown.UIControlSearch.prototype.onListLoadError = function(event_) {
+};
+
+Melown.UIControlSearch.prototype.onFocus = function(event_) {
+    this.lastSearch_ = "";
+    var element_ = this.input_.getElement();  
+    element_.value = this.lastSearch_;
+    this.hideList();
+};
+
+Melown.UIControlSearch.prototype.onKeyPress = function(event_) {
+        console.log("press");
+
+    this.onKeyUp(event_);
+};
+
+Melown.UIControlSearch.prototype.onKeyUp = function(event_) {
+    var code_ = event_.getKeyCode();
+    
+    switch(code_) {
+        case 38:  //up
+            this.moveSelector(-1);
+            Melown.Utils.preventDefault(event_);
+            Melown.Utils.stopPropagation(event_);    
+            break;
+
+        case 40:  //down
+            this.moveSelector(1); 
+            Melown.Utils.preventDefault(event_);
+            Melown.Utils.stopPropagation(event_);    
+            break;
+
+        case 9:  //tab
+        case 13: //enter
+        
+            this.onSelectItem(Math.max(0,this.itemIndex_), null); 
+            break;
+    }
+};
+
+Melown.UIControlSearch.prototype.onChange = function(event_) {
+    var value_ = this.input_.getElement().value;
+    value_ = value_.trim();
+
+    //console.log("value: " + value_ + "  last-value: " + this.lastSearch_);
+
+    if (value_ == this.lastSearch_) {
+        //console.log("value-same");
+        return;        
+    }
+    
+    this.lastSearch_ = value_;
+    
+    if (value_ == "") {
+        //console.log("value-null");
+        this.hideList();        
+    }    
+    
+    var url_ = this.processTemplate(this.urlTemplate_, { "value" : value_ });
+    //console.log(url_);
+    this.searchCounter_++;
+    this.itemIndex_ = -1;
+   
+    Melown.loadJSON(url_, this.onListLoaded.bind(this, this.searchCounter_), this.onListLoadError.bind(this));
+};
+
+Melown.UIControlSearch.prototype.onDrag2 = function(event_) {
+    this.ignoreDrag_ = true; 
+    var element_ = this.input_.getElement();  
+};
+
+Melown.UIControlSearch.prototype.onDrag = function(event_) {
+    if (this.ignoreDrag_) {
+        this.ignoreDrag_ = false;
+        return; 
+    } 
+
+    var element_ = this.input_.getElement();  
+    element_.value = this.lastSearch_;
+    element_.blur(); //defocus'
+    this.hideList(); 
+};
+
+Melown.UIControlSearch.prototype.update = function(event_) {
+    if (this.initialValueUsed_ && this.browser_.mapLoaded_) {
+        this.initialValueUsed_ = false;
+        this.onSelectItem(0);
     }
 };
 
