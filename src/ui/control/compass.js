@@ -40,7 +40,7 @@ Melown.UIControlCompass.prototype.update = function() {
     }
 
     var pos_ = map_.getPosition();
-    var value_ = "rotateX("+((pos_[6]+90)*0.7)+"deg) " + "rotateZ("+(pos_[5]-45)+"deg)";
+    var value_ = "rotateX("+(Math.round(pos_[6]+90)*0.7)+"deg) " + "rotateZ("+Math.round(pos_[5]-45)+"deg)";
 
     if (value_ != this.lastStyle_) {
         this.lastStyle_ = value_;

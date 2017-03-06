@@ -50,7 +50,16 @@ Melown.UIControlLoading.prototype.hide = function() {
     if (search_) { //enable search for melown2015 reference frame only
         var map_ = this.ui_.browser_.getMap();
         if (map_) {
-            search_ = (map_.getReferenceFrame()["id"] == "melown2015");
+            //search_ = (map_.getReferenceFrame()["id"] == "melown2015");
+            
+            var radius_ = map_.getSrsInfo(map_.getReferenceFrame()["physicalSrs"])["a"];
+            
+            if (radius_ < (6378137 + 50000) && radius_ > (6378137 - 50000)) { //is it earth
+                search_ = true;  
+            } else {
+                search_ = false;  
+            }
+            //search_ = (map_.getSrsInfo(map_.getReferenceFrame()["physical"]) == "melown2015");
         }
     } 
     
